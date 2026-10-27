@@ -1,58 +1,80 @@
+import logging
 from contextlib import asynccontextmanager
-from fastapi import FastAPI, HTTPException
-from neo4j.exceptions import ConstraintError, ServiceUnavailable, AuthError
 
-from app.db import driver, cerrar_driver
-from app.schemas import LoteCreate
-from app.routers.trazabilidad import router as trazabilidad_router
+from fastapi import Depends, FastAPI, HTTPException, Request
+from fastapi.responses import JSONResponse
+from neo4j.exceptions import AuthError, ServiceUnavailable
+
+from app.db import asegurar_restricciones, cerrar_driver, get_driver
+from app.routers import lotes_consulta, lotes_escritura, trazabilidad
+
+logger = logging.getLogger("trazagrafo.main")
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    """Gestiona el ciclo de vida de la aplicación.
+
+    Al arrancar intenta crear la restricción de unicidad de ``Lote.codigo``.
+    Si Neo4j aún no responde, registra una advertencia y la API sigue
+    levantando (``/health`` reportará el estado real).
+
+    Args:
+        app: Instancia de FastAPI que se está iniciando.
+
+    Yields:
+        None: Cede el control mientras la aplicación atiende solicitudes.
+    """
+    try:
+        asegurar_restricciones()
+    except (ServiceUnavailable, AuthError, OSError) as exc:
+        logger.warning("No se pudo asegurar las restricciones: %s", exc)
     yield
     cerrar_driver()
 
 
 app = FastAPI(title="TrazaGrafo API", version="0.1.0", lifespan=lifespan)
-app.include_router(trazabilidad_router)
+
+app.include_router(lotes_consulta.router)
+app.include_router(lotes_escritura.router)
+app.include_router(trazabilidad.router)
 
 
 @app.get("/health")
-def health():
-    try:
-        driver.verify_connectivity()
-        return {"status": "ok", "neo4j": "conectado"}
-    except (ServiceUnavailable, AuthError, OSError) as e:
-        raise HTTPException(status_code=503, detail=f"Neo4j no disponible: {e}")
+def health(drv=Depends(get_driver)):
+    """Comprueba la disponibilidad de Neo4j.
 
+    Args:
+        drv: Driver de Neo4j, inyectado por FastAPI mediante get_driver.
 
-@app.post("/lotes", status_code=201)
-def crear_lote(lote: LoteCreate):
-    query = """
-    CREATE (l:Lote {
-        codigo: $codigo, tipo: $tipo, producto: $producto,
-        cantidad_kg: $cantidad_kg, estado: $estado
-    })
-    RETURN l
+    Returns:
+        Un diccionario con el estado de la API y la conexión con Neo4j.
+
+    Raises:
+        HTTPException: Error 503 si Neo4j no está disponible.
     """
     try:
-        records, _, _ = driver.execute_query(
-            query, lote.model_dump(), database_="neo4j"
+        drv.verify_connectivity()
+        return {"status": "ok", "neo4j": "conectado"}
+    except (ServiceUnavailable, AuthError, OSError) as e:
+        raise HTTPException(
+            status_code=503,
+            detail=f"Neo4j no disponible: {e}",
         )
-        return dict(records[0]["l"])
-    except ConstraintError:
-        raise HTTPException(status_code=409, detail=f"Ya existe un lote con código '{lote.codigo}'")
-    except ServiceUnavailable:
-        raise HTTPException(status_code=503, detail="Neo4j no disponible")
 
 
-@app.get("/lotes/{codigo}")
-def obtener_lote(codigo: str):
-    query = "MATCH (l:Lote {codigo: $codigo}) RETURN l"
-    try:
-        records, _, _ = driver.execute_query(query, {"codigo": codigo}, database_="neo4j")
-    except ServiceUnavailable:
-        raise HTTPException(status_code=503, detail="Neo4j no disponible")
-    if not records:
-        raise HTTPException(status_code=404, detail=f"Lote '{codigo}' no encontrado")
-    return dict(records[0]["l"])
+@app.exception_handler(ServiceUnavailable)
+async def neo4j_no_disponible(request: Request, exc: ServiceUnavailable):
+    """Gestiona los errores de disponibilidad de Neo4j.
+
+    Args:
+        request: Solicitud HTTP que produjo el error.
+        exc: Excepción de disponibilidad generada por Neo4j.
+
+    Returns:
+        JSONResponse con el código HTTP 503.
+    """
+    return JSONResponse(
+        status_code=503,
+        content={"detail": "Neo4j no disponible"},
+    )
