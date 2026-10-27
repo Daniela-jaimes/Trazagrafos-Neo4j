@@ -14,7 +14,7 @@ def reemplazar_lote(codigo: str, datos: LoteReplace, drv=Depends(get_driver)):
     Args:
     codigo: Codigo unico del lote que se desea reemplazar
     datos: Datos completos que reemplazara todo el lote existente
-    drv: Driver de Neo4j, inyectado por FastAPI mediante get_driver
+    driv: Driver de Neo4j, inyectado por FastAPI mediante get_driver
     Returns: 
     Un diccionario con las propiedades del lote actualizado
     Raises:
@@ -37,7 +37,7 @@ def actualizar_lote(codigo: str, datos: LotePatch, drv=Depends(get_driver)):
     Args:
     codigo: Codigo unico del lote que se desea actualizar
     datos: Campos que se desean modificar en el lote 
-    drv: Driver de Neo4j, inyectado por FastAPI mediante get_driver
+    driv: Driver de Neo4j, inyectado por FastAPI mediante get_driver
     Returns: 
     Un diccionario con las propiedades actualizadas del lote
     Raises:
@@ -64,7 +64,7 @@ def eliminar_lote(
     Args:
     codigo: Codigo unico del lote que se desea elliminar 
     forzar: Indica si se deben eliminar tambien las relaciones del lote 
-    drv: Driver de Neo4j, inyectado por FastAPI mediante get_driver
+    driv: Driver de Neo4j, inyectado por FastAPI mediante get_driver
     Returns: 
     Una respuesta HTTP 204 sin contenido si la eliminación es exitosa.
     Raises:

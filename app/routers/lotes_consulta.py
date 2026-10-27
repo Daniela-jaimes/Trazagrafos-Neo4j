@@ -59,7 +59,7 @@ def listar_lotes(
     estado: Filtro opcional por estado del lote
     skip: Cantidad de registros dque se omiten desde el inicio. por defecto, 0
     limit: Numero maximo de lotes por pagina. por defecto 50, maximo, 200
-    drv: Driver de Neo4j, inyectado por FastAPI mediante get_driver
+    driv: Driver de Neo4j, inyectado por FastAPI mediante get_driver
     Returns: 
     Una lista de diccionarios con las propiedades de los lotes encontrado. 
     Si no hay coincidencias, devuelve una lista vacia
