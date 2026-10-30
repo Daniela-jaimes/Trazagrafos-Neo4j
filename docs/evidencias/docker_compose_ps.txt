@@ -1,0 +1,4 @@
+﻿NAME               IMAGE                  COMMAND                  SERVICE      CREATED        STATUS                          PORTS
+trazagrafo-api     trazagrafo-neo4j-api   "uvicorn app.main:apÔÇª"   api          2 days ago     Exited (255) 17 hours ago       0.0.0.0:8000->8000/tcp
+trazagrafo-neo4j   neo4j:5-community      "tini -g -- /startupÔÇª"   neo4j        17 hours ago   Up 17 hours (healthy)           0.0.0.0:7474->7474/tcp, [::]:7474->7474/tcp, 0.0.0.0:7687->7687/tcp, [::]:7687->7687/tcp
+trazagrafo-seed    neo4j:5-community      "cypher-shell -a bolÔÇª"   neo4j-seed   17 hours ago   Exited (0) About a minute ago   
