@@ -1,0 +1,13 @@
+﻿tipo, total
+"Incidente", 2
+"Instalacion", 6
+"Lote", 10
+"Productor", 4
+"PuntoVenta", 6
+
+relacion, total
+"AFECTA", 2
+"ENVIADO_A", 10
+"INSUMO_DE", 8
+"PROCESADO_EN", 7
+"PRODUCE", 5

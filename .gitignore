@@ -29,3 +29,8 @@ desktop.ini
 # Archivos temporales
 *.tmp
 *.bak
+# Las evidencias si se versionan
+!docs/evidencias/**/*.log
+
+# Las evidencias si se versionan
+!docs/evidencias/**/*.log

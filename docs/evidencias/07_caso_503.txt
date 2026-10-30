@@ -1,0 +1,16 @@
+﻿# Neo4j detenido
+HTTP/1.1 500 Internal Server Error
+date: Fri, 30 Oct 2026 15:45:32 GMT
+server: uvicorn
+content-length: 21
+content-type: text/plain; charset=utf-8
+
+Internal Server Error
+
+HTTP/1.1 500 Internal Server Error
+date: Fri, 30 Oct 2026 15:45:36 GMT
+server: uvicorn
+content-length: 21
+content-type: text/plain; charset=utf-8
+
+Internal Server Error
