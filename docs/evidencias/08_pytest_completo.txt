@@ -1,0 +1,68 @@
+﻿============================= test session starts =============================
+platform win32 -- Python 3.13.15, pytest-9.2.0, pluggy-1.7.0 -- D:\base de datos\trazagrafo_Neo4j\trazagrafo-neo4j\venv\Scripts\python.exe
+cachedir: .pytest_cache
+rootdir: D:\base de datos\trazagrafo_Neo4j\trazagrafo-neo4j
+configfile: pytest.ini
+testpaths: tests
+plugins: anyio-4.15.1
+collecting ... collected 50 items
+
+tests/test_api_lotes.py::test_crear_lote_devuelve_201 PASSED             [  2%]
+tests/test_api_lotes.py::test_crear_lote_duplicado_409 PASSED            [  4%]
+tests/test_api_lotes.py::test_crear_lote_datos_invalidos_422[cambio0] PASSED [  6%]
+tests/test_api_lotes.py::test_crear_lote_datos_invalidos_422[cambio1] PASSED [  8%]
+tests/test_api_lotes.py::test_crear_lote_datos_invalidos_422[cambio2] PASSED [ 10%]
+tests/test_api_lotes.py::test_crear_lote_datos_invalidos_422[cambio3] PASSED [ 12%]
+tests/test_api_lotes.py::test_crear_lote_datos_invalidos_422[cambio4] PASSED [ 14%]
+tests/test_api_lotes.py::test_crear_lote_sin_neo4j_503 PASSED            [ 16%]
+tests/test_api_lotes.py::test_obtener_lote_200 PASSED                    [ 18%]
+tests/test_api_lotes.py::test_obtener_lote_sin_neo4j_503 PASSED          [ 20%]
+tests/test_api_lotes.py::test_listar_lotes_200 PASSED                    [ 22%]
+tests/test_api_lotes.py::test_listar_lotes_pasa_filtros_y_paginacion PASSED [ 24%]
+tests/test_api_lotes.py::test_listar_lotes_vacio_devuelve_lista_vacia PASSED [ 26%]
+tests/test_api_lotes.py::test_obtener_lote_inexistente_devuelve_404 PASSED [ 28%]
+tests/test_api_lotes.py::test_listar_lotes_parametros_invalidos_422[limit=0] PASSED [ 30%]
+tests/test_api_lotes.py::test_listar_lotes_parametros_invalidos_422[limit=201] PASSED [ 32%]
+tests/test_api_lotes.py::test_listar_lotes_parametros_invalidos_422[skip=-1] PASSED [ 34%]
+tests/test_api_lotes.py::test_listar_lotes_parametros_invalidos_422[tipo=OTRO] PASSED [ 36%]
+tests/test_api_lotes.py::test_listar_lotes_parametros_invalidos_422[estado=activo] PASSED [ 38%]
+tests/test_api_lotes.py::test_listar_lotes_sin_neo4j_503 PASSED          [ 40%]
+tests/test_api_lotes.py::test_put_200 PASSED                             [ 42%]
+tests/test_api_lotes.py::test_put_inexistente_404 PASSED                 [ 44%]
+tests/test_api_lotes.py::test_put_cuerpo_incompleto_422 PASSED           [ 46%]
+tests/test_api_lotes.py::test_patch_200_solo_envia_campos_presentes PASSED [ 48%]
+tests/test_api_lotes.py::test_patch_vacio_422 PASSED                     [ 50%]
+tests/test_api_lotes.py::test_patch_inexistente_404 PASSED               [ 52%]
+tests/test_api_lotes.py::test_delete_sin_relaciones_204 PASSED           [ 54%]
+tests/test_api_lotes.py::test_delete_con_relaciones_409_y_no_borra PASSED [ 56%]
+tests/test_api_lotes.py::test_delete_con_relaciones_y_forzar_204 PASSED  [ 58%]
+tests/test_api_lotes.py::test_delete_inexistente_404 PASSED              [ 60%]
+tests/test_api_lotes.py::test_delete_sin_neo4j_503 PASSED                [ 62%]
+tests/test_api_lotes.py::test_health_ok PASSED                           [ 64%]
+tests/test_api_lotes.py::test_health_sin_neo4j_503 PASSED                [ 66%]
+tests/test_compose_config.py::test_api_build_apunta_a_raiz_con_dockerfile PASSED [ 68%]
+tests/test_compose_config.py::test_seed_montado_existe PASSED            [ 70%]
+tests/test_compose_config.py::test_env_example_define_variables_requeridas PASSED [ 72%]
+tests/test_integration_lotes.py::test_ciclo_crud_completo_con_neo4j_real PASSED [ 74%]
+tests/test_lifespan.py::test_arranque_asegura_restricciones_y_cierra_driver PASSED [ 76%]
+tests/test_lifespan.py::test_arranque_tolera_neo4j_caido PASSED          [ 78%]
+tests/test_lifespan.py::test_asegurar_restricciones_es_idempotente PASSED [ 80%]
+tests/test_seed_traceability.py::SeedTraceabilityIntegrationTests::test_seed_has_expected_facilities_and_shipments PASSED [ 82%]
+tests/test_seed_traceability.py::SeedTraceabilityIntegrationTests::test_seeded_finished_lot_traces_back_to_all_producers PASSED [ 84%]
+tests/test_seed_traceability.py::SeedTraceabilityIntegrationTests::test_seeded_incident_traces_to_affected_stores PASSED [ 86%]
+tests/test_seed_traceability.py::SeedTraceabilityIntegrationTests::test_seeded_raw_lot_traces_to_all_impacted_stores PASSED [ 88%]
+tests/test_trazabilidad.py::TraceabilityEndpointTests::test_backward_trace_returns_lot_origins PASSED [ 90%]
+tests/test_trazabilidad.py::TraceabilityEndpointTests::test_forward_trace_returns_shipments_and_destinations PASSED [ 92%]
+tests/test_trazabilidad.py::TraceabilityEndpointTests::test_incident_trace_returns_impacted_shipments PASSED [ 94%]
+tests/test_trazabilidad.py::TraceabilityEndpointTests::test_neo4j_unavailable_returns_503 PASSED [ 96%]
+tests/test_trazabilidad.py::TraceabilityEndpointTests::test_traceability_routes_are_registered PASSED [ 98%]
+tests/test_trazabilidad.py::TraceabilityEndpointTests::test_unknown_lot_and_incident_return_404 
+tests/test_trazabilidad.py::TraceabilityEndpointTests::test_unknown_lot_and_incident_return_404 PASSED [100%]
+
+============================== warnings summary ===============================
+venv\Lib\site-packages\fastapi\testclient.py:1
+  D:\base de datos\trazagrafo_Neo4j\trazagrafo-neo4j\venv\Lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+============== 50 passed, 1 warning, 3 subtests passed in 3.41s ===============

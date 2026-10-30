@@ -1,0 +1,76 @@
+﻿Evidencias CRUD - 2026-10-30 10:45:19 - http://localhost:8000
+
+### 0. Salud (200)
+$ curl -X GET http://localhost:8000/health
+{"status":"ok","neo4j":"conectado"}
+HTTP 200
+
+### 1. Crear lote (201)
+$ curl -X POST http://localhost:8000/lotes -d '{"codigo":"EVID-20261030104519","tipo":"MATERIA_PRIMA","producto":"Leche","cantidad_kg":50}'
+{"codigo":"EVID-20261030104519","tipo":"MATERIA_PRIMA","producto":"Leche","cantidad_kg":50.0,"estado":"ACTIVO"}
+HTTP 201
+
+### 2. Crear duplicado (409)
+$ curl -X POST http://localhost:8000/lotes -d '{"codigo":"EVID-20261030104519","tipo":"MATERIA_PRIMA","producto":"Leche","cantidad_kg":50}'
+{"detail":"Ya existe un lote con c├│digo 'EVID-20261030104519'"}
+HTTP 409
+
+### 3. Datos invalidos (422)
+$ curl -X POST http://localhost:8000/lotes -d '{"codigo":"EVID-20261030104519-X","tipo":"OTRO","producto":"Leche","cantidad_kg":-1}'
+{"detail":[{"type":"literal_error","loc":["body","tipo"],"msg":"Input should be 'MATERIA_PRIMA' or 'PRODUCTO'","input":"OTRO","ctx":{"expected":"'MATERIA_PRIMA' or 'PRODUCTO'"}},{"type":"greater_than","loc":["body","cantidad_kg"],"msg":"Input should be greater than 0","input":-1,"ctx":{"gt":0.0}}]}
+HTTP 422
+
+### 4. Listar (200)
+$ curl -X GET http://localhost:8000/lotes?limit=5
+[{"codigo":"EVID-20261030104519","tipo":"MATERIA_PRIMA","producto":"Leche","cantidad_kg":50.0,"estado":"ACTIVO"},{"codigo":"MP-001","tipo":"MATERIA_PRIMA","producto":"Leche","cantidad_kg":80.0,"estado":"ACTIVO"},{"codigo":"MP-002","tipo":"MATERIA_PRIMA","producto":"Leche","cantidad_kg":60.0,"estado":"ACTIVO"},{"codigo":"MP-003","tipo":"MATERIA_PRIMA","producto":"Leche","cantidad_kg":55.0,"estado":"ACTIVO"},{"codigo":"MP-004","tipo":"MATERIA_PRIMA","producto":"Fresa","cantidad_kg":45.0,"estado":"ACTIVO"}]
+HTTP 200
+
+### 5. Listar con filtro (200)
+$ curl -X GET http://localhost:8000/lotes?tipo=PRODUCTO
+[{"codigo":"PT-010","tipo":"PRODUCTO","producto":"Queso campesino","cantidad_kg":40.0,"estado":"ACTIVO"},{"codigo":"PT-011","tipo":"PRODUCTO","producto":"Yogur de fresa","cantidad_kg":35.0,"estado":"ACTIVO"},{"codigo":"PT-020","tipo":"PRODUCTO","producto":"Postre l├ícteo","cantidad_kg":20.0,"estado":"ACTIVO"},{"codigo":"PT-030","tipo":"PRODUCTO","producto":"Queso madurado","cantidad_kg":26.0,"estado":"ACTIVO"},{"codigo":"PT-040","tipo":"PRODUCTO","producto":"Mermelada de fresa","cantidad_kg":30.0,"estado":"ACTIVO"}]
+HTTP 200
+
+### 6. Obtener lote (200)
+$ curl -X GET http://localhost:8000/lotes/EVID-20261030104519
+{"codigo":"EVID-20261030104519","tipo":"MATERIA_PRIMA","producto":"Leche","cantidad_kg":50.0,"estado":"ACTIVO"}
+HTTP 200
+
+### 7. Obtener inexistente (404)
+$ curl -X GET http://localhost:8000/lotes/NO-EXISTE
+{"detail":"Lote 'NO-EXISTE' no encontrado"}
+HTTP 404
+
+### 8. PUT (200)
+$ curl -X PUT http://localhost:8000/lotes/EVID-20261030104519 -d '{"tipo":"PRODUCTO","producto":"Queso","cantidad_kg":12.5,"estado":"ACTIVO"}'
+{"codigo":"EVID-20261030104519","tipo":"PRODUCTO","producto":"Queso","cantidad_kg":12.5,"estado":"ACTIVO"}
+HTTP 200
+
+### 9. PATCH (200)
+$ curl -X PATCH http://localhost:8000/lotes/EVID-20261030104519 -d '{"estado":"RETIRADO"}'
+{"codigo":"EVID-20261030104519","tipo":"PRODUCTO","producto":"Queso","cantidad_kg":12.5,"estado":"RETIRADO"}
+HTTP 200
+
+### 10. PATCH vacio (422)
+$ curl -X PATCH http://localhost:8000/lotes/EVID-20261030104519 -d '{}'
+{"detail":[{"type":"value_error","loc":["body"],"msg":"Value error, Debe enviar al menos un campo para actualizar","input":{},"ctx":{"error":{}}}]}
+HTTP 422
+
+### 11. PUT inexistente (404)
+$ curl -X PUT http://localhost:8000/lotes/NO-EXISTE -d '{"tipo":"PRODUCTO","producto":"Queso","cantidad_kg":1}'
+{"detail":"Lote 'NO-EXISTE' no encontrado"}
+HTTP 404
+
+### 12. DELETE con relaciones sin forzar (409)
+$ curl -X DELETE http://localhost:8000/lotes/MP-001
+{"detail":"El lote 'MP-001' tiene 4 relaci├│n(es) en la cadena de trazabilidad. Use ?forzar=true para eliminarlo junto con ellas."}
+HTTP 409
+
+### 13. DELETE lote propio (204)
+$ curl -X DELETE http://localhost:8000/lotes/EVID-20261030104519
+
+HTTP 204
+
+### 14. Confirmar borrado (404)
+$ curl -X GET http://localhost:8000/lotes/EVID-20261030104519
+{"detail":"Lote 'EVID-20261030104519' no encontrado"}
+HTTP 404

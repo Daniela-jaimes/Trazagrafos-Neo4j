@@ -1,6 +1,0 @@
-﻿tipo, total
-"Productor", 2
-"Lote", 4
-"Instalacion", 1
-"PuntoVenta", 1
-"Incidente", 1
